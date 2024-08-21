@@ -2,15 +2,24 @@ import os
 import mido
 import heapq
 from classes import *
+
 class Midi:
     
     NOTE_MAP = {
-        36: '1',  37: '!',  38: '2',  39: '@',  40: '3',  41: '4',  42: '$',  43: '5',  44: '%',  45: '6',  46: '^',  47: '7',
-        48: '8',  49: '*',  50: '9',  51: '(',  52: '0',  53: 'q',  54: 'Q',  55: 'w',  56: 'W',  57: 'e',  58: 'E',  59: 'r',
-        60: 't',  61: 'T',  62: 'y',  63: 'Y',  64: 'u',  65: 'i',  66: 'I',  67: 'o',  68: 'O',  69: 'p',  70: 'P',  71: 'a',
-        72: 's',  73: 'S',  74: 'd',  75: 'D',  76: 'f',  77: 'g',  78: 'G',  79: 'h',  80: 'H',  81: 'j',  82: 'J',  83: 'k',
-        84: 'l',  85: 'L',  86: 'z',  87: 'Z',  88: 'x',  89: 'c',  90: 'C',  91: 'v',  92: 'V',  93: 'b',  94: 'B',  95: 'n',
+        36: '1',  38: '2',  40: '3',  41: '4',  43: '5',  45: '6',  47: '7',
+        48: '8',  50: '9',  52: '0',  53: 'q',  55: 'w',  57: 'e',  59: 'r',
+        60: 't',  62: 'y',  64: 'u',  65: 'i',  67: 'o',  69: 'p',  71: 'a',
+        72: 's',  74: 'd',  76: 'f',  77: 'g',  79: 'h',  81: 'j',  83: 'k',
+        84: 'l',  86: 'z',  88: 'x',  89: 'c',  91: 'v',  93: 'b',  95: 'n',
         96: 'm'
+    }
+
+    SPECIAL_NOTE_MAP = {
+        37: '!',  39: '@',  42: '$',  44: '%',  46: '^',
+        49: '*',  51: '(',  54: 'Q',  56: 'W',  58: 'E',
+        61: 'T',  63: 'Y',  66: 'I',  68: 'O',  70: 'P',
+        73: 'S',  75: 'D',  78: 'G',  80: 'H',  82: 'J',
+        85: 'L',  87: 'Z',  90: 'C',  92: 'V',  94: 'B'
     }
     
     def __init__(self, filepath: str, progress_callback=None):
@@ -43,6 +52,9 @@ class Midi:
                     if note in self.NOTE_MAP:
                         clock_turn = round(absolute_time)
                         note_list.append((self.NOTE_MAP[note], clock_turn))
+                    elif note in self.SPECIAL_NOTE_MAP:
+                        clock_turn = round(absolute_time)
+                        note_list.append((self.SPECIAL_NOTE_MAP[note], clock_turn))
                 processed_messages += 1
                 if self.progress_callback:
                     progress = (processed_messages / total_messages) * 100
